@@ -2,7 +2,6 @@ package com.team4.yamblz.timetogo.data;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 
 import com.team4.yamblz.timetogo.R;
@@ -18,7 +17,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 

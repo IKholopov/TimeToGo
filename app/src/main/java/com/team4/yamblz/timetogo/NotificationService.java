@@ -13,6 +13,10 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import java.util.Calendar;
+
+import com.team4.yamblz.timetogo.data.MapParserImpl;
+import com.team4.yamblz.timetogo.data.RouteMode;
 
 public class NotificationService extends IntentService {
     private static final String EXTRA_LON = "longitude";
@@ -32,28 +36,25 @@ public class NotificationService extends IntentService {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public static Intent newIntent(Context context, double lon, double lat){
-        Intent i = new Intent(context,NotificationService.class);
-
-        i.putExtra(EXTRA_LON,lon);
-        i.putExtra(EXTRA_LAT,lat);
-
-        return i;
+    public static Intent newIntent(Context context){
+        return new Intent(context,NotificationService.class);
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        //Calendar currentTime = Calendar.getInstance();
 
+        //RouteMode mode =
 
+        Calendar timeCurrent = Calendar.getInstance();
+        Calendar timeToBe = new MapParserImpl(this).GetTimeToEvent(RouteMode.CAR);
 
-        Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194");
+        String mapString = "google.navigation:q=55.7340273,37.5883457&mode=b";
+        Uri gmmIntentUri = Uri.parse(mapString);
+
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 
         mapIntent.setPackage("com.google.android.apps.maps");
-
         PendingIntent pi = PendingIntent.getActivity(this,0,mapIntent,0);
-
         Resources res = getResources();
 
         Notification notification = new NotificationCompat.Builder(this)
@@ -71,7 +72,7 @@ public class NotificationService extends IntentService {
 
     public static void setServiceAlarm(Context context, boolean isOn){
 
-        Intent i = NotificationService.newIntent(context,6,6);
+        Intent i = NotificationService.newIntent(context);
 
         PendingIntent pi =PendingIntent.getService(context,0,i,0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
