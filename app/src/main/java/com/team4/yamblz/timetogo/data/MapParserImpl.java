@@ -1,13 +1,9 @@
 package com.team4.yamblz.timetogo.data;
 
 import android.content.Context;
-import android.location.Location;
 import android.net.Uri;
-import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.team4.yamblz.timetogo.R;
 
 import org.json.JSONArray;
@@ -21,7 +17,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
