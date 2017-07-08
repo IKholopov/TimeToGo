@@ -58,7 +58,7 @@ public class TimeToGoDbHelper extends SQLiteOpenHelper {
         for (Schedule event : schedule) {
             ContentValues values = new ContentValues();
             values.put(TimeToGoDbSchema.ScheduleTable.Cols.TITLE, event.getTitle());
-            values.put(TimeToGoDbSchema.ScheduleTable.Cols.ACCEPTED, event.isAccepted());
+            values.put(TimeToGoDbSchema.ScheduleTable.Cols.ACCEPTED, true);
             values.put(TimeToGoDbSchema.ScheduleTable.Cols.DURATION, event.getDuration());
             values.put(TimeToGoDbSchema.ScheduleTable.Cols.LOCATION, event.getLocation());
             values.put(TimeToGoDbSchema.ScheduleTable.Cols.TIME, event.getTime());
