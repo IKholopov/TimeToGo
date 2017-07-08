@@ -43,7 +43,7 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Calendar currentTime = Calendar.getInstance();
+        //Calendar currentTime = Calendar.getInstance();
 
 
 
