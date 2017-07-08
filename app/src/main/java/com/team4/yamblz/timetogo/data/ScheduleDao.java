@@ -18,11 +18,18 @@ import java.util.List;
 
 public class ScheduleDao {
     private static final String TAG = "ScheduleDao";
+    private static ScheduleDao scheduleDao;
 
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    public ScheduleDao(Context context) {
+    public static ScheduleDao get(Context context) {
+        if (scheduleDao == null)
+            scheduleDao = new ScheduleDao(context);
+        return scheduleDao;
+    }
+
+    private ScheduleDao(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new TimeToGoDbHelper(mContext).getWritableDatabase();
     }
