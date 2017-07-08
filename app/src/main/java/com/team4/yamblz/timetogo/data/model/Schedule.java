@@ -6,6 +6,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Schedule {
+    private long mId;
+    private boolean mAccepted;
     @SerializedName("duration")
     @Expose
     private Double duration;
@@ -24,6 +26,17 @@ public class Schedule {
     @SerializedName("title")
     @Expose
     private String title;
+
+    public Schedule() {
+    }
+
+    public Schedule(long id) {
+        mId = id;
+    }
+
+    public long getId() {
+        return mId;
+    }
 
     public Double getDuration() {
         return duration;
@@ -71,5 +84,13 @@ public class Schedule {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isAccepted() {
+        return mAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        mAccepted = accepted;
     }
 }
