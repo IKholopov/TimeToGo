@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.location.LocationServices;
@@ -23,6 +25,7 @@ import com.team4.yamblz.timetogo.data.BotDataAssetReader;
 import com.team4.yamblz.timetogo.data.BotDataParserImpl;
 import com.team4.yamblz.timetogo.data.MapParserImpl;
 import com.team4.yamblz.timetogo.data.RouteMode;
+import com.team4.yamblz.timetogo.data.ScheduleDao;
 import com.team4.yamblz.timetogo.data.model.MobilizationBotData;
 import com.team4.yamblz.timetogo.data.model.Schedule;
 
@@ -94,29 +97,40 @@ public class NotificationService extends IntentService {
     }
 
     private void showNotification(Location location) throws java.text.ParseException{
-        RouteMode mode = RouteMode.PUBLIC;//Взять
+        RouteMode mode;
 
-        MobilizationBotData data = new BotDataParserImpl()
-                .fromJson(new BotDataAssetReader(this).getText());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String strMode = sharedPreferences.getString("route_mode",null);
+
+        if(strMode == getString(R.string.route_mode_car)){
+            mode = RouteMode.CAR;
+        }else
+        {
+            mode = RouteMode.PUBLIC;
+        }
+
+        String school = sharedPreferences.getString("mobilization_school","");
 
         Date dateOfLecture = new Date();
-        List<Schedule> schedules = data.getSchedule();
+        List<Schedule> schedules = ScheduleDao.get(this).getSchedules();
 
         //Поиск следующего занятия
         for(int i=0;i<schedules.size();i++){
             Schedule schedule = schedules.get(i);
-            dateOfLecture = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").parse(schedule.getTime());
+            if(schedule.getSchools().contains(school)) {
+                dateOfLecture = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").parse(schedule.getTime());
 
-            Date currentDate = new Date();
+                Date currentDate = new Date();
 
-            if(currentDate.getTime()<dateOfLecture.getTime()){
-                //И еще школа должна учитываться
-                break;
+                if (currentDate.getTime() < dateOfLecture.getTime()) {
+                    //И еще школа должна учитываться
+                    break;
+                }
+                Log.d("Date", currentDate.toString());
+                Log.d("Date", dateOfLecture.toString());
+
+                Log.d("Time: ", schedule.getTime());
             }
-            Log.d("Date",currentDate.toString());
-            Log.d("Date",dateOfLecture.toString());
-
-            Log.d("Time: ",schedule.getTime());
         }
 
 
