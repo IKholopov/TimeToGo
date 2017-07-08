@@ -3,6 +3,7 @@
 /local.properties
 /app/src/main/bot-data.json
 /app/src/main/assets
+/app/src/main/assets/MobilizationBotData.json
 /.idea/workspace.xml
 /.idea/libraries
 /.idea/modules.xml
