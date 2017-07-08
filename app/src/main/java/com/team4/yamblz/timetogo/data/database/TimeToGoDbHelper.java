@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.team4.yamblz.timetogo.data.BotDataAssetReader;
 import com.team4.yamblz.timetogo.data.BotDataParserImpl;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class TimeToGoDbHelper extends SQLiteOpenHelper {
     private static final String TAG = "TimeToGoDbHelper";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "timeToGoDatabase.db";
 
     private Context mContext;
@@ -47,8 +48,15 @@ public class TimeToGoDbHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion == 2) {
+            refillDatabase(db);
+        }
+    }
 
+    private void refillDatabase(SQLiteDatabase db) {
+        db.delete(TimeToGoDbSchema.ScheduleTable.NAME, null, null);
+        fillDatabase(db);
     }
 
     private void fillDatabase(SQLiteDatabase db) {
@@ -69,5 +77,7 @@ public class TimeToGoDbHelper extends SQLiteOpenHelper {
 
             db.insert(TimeToGoDbSchema.ScheduleTable.NAME, null, values);
         }
+
+        Log.d(TAG, "fillDatabase: database filled.");
     }
 }
