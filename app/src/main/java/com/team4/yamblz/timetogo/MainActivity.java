@@ -1,5 +1,7 @@
 package com.team4.yamblz.timetogo;
 
+import android.app.Activity;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -14,12 +16,20 @@ import com.team4.yamblz.timetogo.data.MapParser;
 import com.team4.yamblz.timetogo.data.model.MobilizationBotData;
 
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
+    public static MainActivity activity;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MobilizationBotData data = new BotDataParserImpl().fromJson(new BotDataAssetReader(this).getText());
         setContentView(R.layout.activity_main);
+        if(savedInstanceState!=null) {
+            position = savedInstanceState.getInt("position", 0);
+        }else{
+            position = 0;
+        }
+        activity = this;
         NotificationService.setServiceAlarm(this,true);
 
         ActivityCompat.requestPermissions(MainActivity.this,
@@ -29,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(this);
         fm.beginTransaction()
-                .add(R.id.fragment_container, new ScheduleFragment())
+                .add(R.id.fragment_container, ScheduleFragment.newInstance(position))
                 .commitAllowingStateLoss();
     }
 
@@ -75,5 +85,11 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putInt("position", position);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 }
