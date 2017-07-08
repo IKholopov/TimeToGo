@@ -64,7 +64,7 @@ public class NotificationService extends IntentService {
                             }
                         }
                     });
-        }catch (Exception e){
+        }catch (SecurityException e){
             //Не вышло
             return;
         }
