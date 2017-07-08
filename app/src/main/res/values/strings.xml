@@ -9,5 +9,12 @@
     <string name="default_destination_coords">55.734304,37.5869733</string>
     <string name="mode_car">driving</string>
     <string name="mode_public">transit</string>
+    <string name="school">School</string>
+    <string name="school_management_val">0</string>
+    <string name="school_design_val">1</string>
+    <string name="school_frontend_val">2</string>
+    <string name="school_development_val">3</string>
+    <string name="route_mode_car">0</string>
+    <string name="route_mode_public">1</string>
 
 </resources>

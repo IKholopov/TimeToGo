@@ -7,11 +7,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
 import android.widget.Toast;
+
+import com.team4.yamblz.timetogo.data.BotDataAssetReader;
+import com.team4.yamblz.timetogo.data.BotDataParserImpl;
+import com.team4.yamblz.timetogo.data.MapParser;
+import com.team4.yamblz.timetogo.data.model.MobilizationBotData;
+
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobilizationBotData data = new BotDataParserImpl().fromJson(new BotDataAssetReader(this).getText());
         setContentView(R.layout.activity_main);
         NotificationService.setServiceAlarm(this,true);
 
