@@ -1,7 +1,7 @@
 *.iml
 .gradle
 /local.properties
-/app/bot-data.json
+/app/src/main/bot-data.json
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
