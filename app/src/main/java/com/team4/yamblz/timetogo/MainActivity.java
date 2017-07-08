@@ -38,9 +38,11 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(this);
-        fm.beginTransaction()
-                .add(R.id.fragment_container, ScheduleFragment.newInstance(position))
-                .commitAllowingStateLoss();
+        if(savedInstanceState == null) {
+            fm.beginTransaction()
+                    .add(R.id.fragment_container, ScheduleFragment.newInstance(position))
+                    .commitAllowingStateLoss();
+        }
     }
 
     @Override
