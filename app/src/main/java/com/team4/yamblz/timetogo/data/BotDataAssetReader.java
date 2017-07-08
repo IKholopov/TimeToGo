@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 
 /**
  * Created by AleksanderSh on 08.07.2017.
+ * <p>
+ * Для более удобной работы с текстом json в assets.
  */
 
 public class BotDataAssetReader {
@@ -20,6 +22,11 @@ public class BotDataAssetReader {
         mContext = context;
     }
 
+    /**
+     * Получить содержимое json-файла в виде текста.
+     *
+     * @return json-текст
+     */
     public String getText() {
         AssetManager assetManager = mContext.getAssets();
         StringBuilder stringBuilder = new StringBuilder();

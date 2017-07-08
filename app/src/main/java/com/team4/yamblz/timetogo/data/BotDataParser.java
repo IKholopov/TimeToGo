@@ -7,5 +7,11 @@ import com.team4.yamblz.timetogo.data.model.MobilizationBotData;
  */
 
 public interface BotDataParser {
+    /**
+     * Перевод json в объекты java.
+     *
+     * @param json Json-текст
+     * @return Собранный из json объект с данными
+     */
     MobilizationBotData fromJson(String json);
 }

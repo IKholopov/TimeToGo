@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * Created by AleksanderSh on 08.07.2017.
+ * <p>
+ * Класс для работы с базой данных.
  */
 
 public class ScheduleDao {
@@ -23,6 +25,12 @@ public class ScheduleDao {
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
+    /**
+     * Класс сделан синглтоном, поэтому получение экземпляра через этот статический метод.
+     *
+     * @param context Контекст
+     * @return Единственный экземпляр класса.
+     */
     public static ScheduleDao get(Context context) {
         if (scheduleDao == null)
             scheduleDao = new ScheduleDao(context);
@@ -34,6 +42,11 @@ public class ScheduleDao {
         mDatabase = new TimeToGoDbHelper(mContext).getWritableDatabase();
     }
 
+    /**
+     * Получение всего списка событий в базе данных.
+     *
+     * @return список событий.
+     */
     public List<Schedule> getSchedules() {
         List<Schedule> schedules = new ArrayList<>();
         mDatabase.beginTransaction();
@@ -55,6 +68,12 @@ public class ScheduleDao {
         return schedules;
     }
 
+    /**
+     * Получение события по его идентификатору.
+     *
+     * @param id Идентификатор события
+     * @return Найденное событие, если событие в бд не найдено, возвращается {@code null}.
+     */
     public Schedule getScheduleById(long id) {
         Schedule schedule = null;
         String selection = TimeToGoDbSchema.ScheduleTable.Cols._ID + " = ?";
@@ -77,6 +96,11 @@ public class ScheduleDao {
         return schedule;
     }
 
+    /**
+     * Обновление события в базе данных.
+     *
+     * @param schedule Событие, которое следует обновить.
+     */
     public void saveSchedule(Schedule schedule) {
         String selection = TimeToGoDbSchema.ScheduleTable.Cols._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(schedule.getId())};
