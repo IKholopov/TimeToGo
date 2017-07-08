@@ -2,10 +2,15 @@
 .gradle
 /local.properties
 /app/src/main/bot-data.json
+/app/src/main/assets
+/app/src/main/assets/MobilizationBotData.txt
 /.idea/workspace.xml
 /.idea/libraries
+/.idea/modules.xml
+/.idea/vcs.xml
 .DS_Store
 /build
 /captures
 .externalNativeBuild
+.idea/modules.xml
 *~

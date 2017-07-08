@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="mobilization_school"
+        android:title="@string/school"
+        android:entries="@array/school_list_names"
+        android:entryValues="@array/school_list_values"
+        android:defaultValue="0"/>
+    <CheckBoxPreference
+        android:key="push_notification"
+        android:title="Push notifications"
+        android:defaultValue="true"/>
+    <ListPreference
+        android:key="route_mode"
+        android:title="Transport"
+        android:entries="@array/route_mode_names"
+        android:entryValues="@array/route_mode_values"
+        android:defaultValue="0"/>
+</PreferenceScreen>
