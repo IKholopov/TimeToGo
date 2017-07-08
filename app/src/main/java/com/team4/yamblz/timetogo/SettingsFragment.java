@@ -37,6 +37,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        PreferenceManager preferenceManager = getPreferenceManager();
+        preferenceManager.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        PreferenceManager preferenceManager = getPreferenceManager();
+        preferenceManager.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
