@@ -127,7 +127,7 @@ public class NotificationService extends IntentService {
         Date dateToBe = timeToBe.getTime();
 
 
-        if(dateToBe.getTime()>dateOfLecture.getTime()){
+        if(dateToBe.getTime()>dateOfLecture.getTime() | true){
             String mapString = "google.navigation:q=55.7340273,37.5883457";
             if(mode == RouteMode.CAR){
                 mapString+="&mode=d";

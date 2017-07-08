@@ -17,7 +17,11 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        position = savedInstanceState.getInt("position", 0);
+        if(savedInstanceState!=null) {
+            position = savedInstanceState.getInt("position", 0);
+        }else{
+            position = 0;
+        }
         activity = this;
         NotificationService.setServiceAlarm(this,true);
 
