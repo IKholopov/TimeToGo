@@ -18,5 +18,7 @@
     <string name="school_development_val">3</string>
     <string name="route_mode_car">0</string>
     <string name="route_mode_public">1</string>
+    <string name="setup_message">Set up your school and way to get around!</string>
+    <string name="never_be_late">Never be late again!</string>
 
 </resources>
