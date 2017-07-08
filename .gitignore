@@ -2,6 +2,7 @@
 .gradle
 /local.properties
 /app/src/main/bot-data.json
+/app/src/main/assets
 /.idea/workspace.xml
 /.idea/libraries
 /.idea/modules.xml
