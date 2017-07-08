@@ -35,7 +35,8 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
         MapParser parser = new MapParserImpl(appContext);
-        Calendar arrival = parser.GetTimeToEvent(55.7334551, 37.5869947, RouteMode.CAR);
+        Calendar arrival = parser.GetTimeToEvent(42.204321,-77.1124577, RouteMode.CAR);
+        //55.7334551, 37.5869947
         Calendar now = Calendar.getInstance();
         long diff = arrival.getTimeInMillis() - now.getTimeInMillis();
         assertEquals(true, (diff - 390*1000) < 20*1000);
