@@ -6,7 +6,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
@@ -14,29 +13,33 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-
-import java.util.Calendar;
+import android.util.Log;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.team4.yamblz.timetogo.data.BotDataAssetReader;
+import com.team4.yamblz.timetogo.data.BotDataParserImpl;
 import com.team4.yamblz.timetogo.data.MapParserImpl;
 import com.team4.yamblz.timetogo.data.RouteMode;
+import com.team4.yamblz.timetogo.data.model.MobilizationBotData;
+import com.team4.yamblz.timetogo.data.model.Schedule;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class NotificationService extends IntentService {
-    private static final String EXTRA_LON = "longitude";
-    private static final String EXTRA_LAT = "latitude";
-
-    private static final String SERVER_NAME = "TIME_TO_GO_SERVICE";
+    private static final String SERVICE_NAME = "TIME_TO_GO_SERVICE";
 
     private static final int REPEAT_INTERVAL = 1000 * 10;// 10 сек
 
     private AsyncLocator locator;
 
     public NotificationService() {
-        super(SERVER_NAME);
+        super(SERVICE_NAME);
     }
 
     @Override
@@ -64,7 +67,10 @@ public class NotificationService extends IntentService {
                             }
                         }
                     });
-        }catch (SecurityException e){
+        }catch (SecurityException se){
+            //Не вышло
+        }
+        catch (Exception e){
             //Не вышло
             return;
         }
@@ -87,40 +93,76 @@ public class NotificationService extends IntentService {
         }
     }
 
-    private void showNotification(Location location){
-        RouteMode mode = RouteMode.CAR;
+    private void showNotification(Location location) throws java.text.ParseException{
+        RouteMode mode = RouteMode.PUBLIC;//Взять
 
-        Calendar timeCurrent = Calendar.getInstance();
+        MobilizationBotData data = new BotDataParserImpl()
+                .fromJson(new BotDataAssetReader(this).getText());
+
+        Date dateOfLecture = new Date();
+        List<Schedule> schedules = data.getSchedule();
+
+        //Поиск следующего занятия
+        for(int i=0;i<schedules.size();i++){
+            Schedule schedule = schedules.get(i);
+            dateOfLecture = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").parse(schedule.getTime());
+
+            Date currentDate = new Date();
+
+            if(currentDate.getTime()<dateOfLecture.getTime()){
+                //И еще школа должна учитываться
+                break;
+            }
+            Log.d("Date",currentDate.toString());
+            Log.d("Date",dateOfLecture.toString());
+
+            Log.d("Time: ",schedule.getTime());
+        }
+
+
         Calendar timeToBe = new MapParserImpl(this)
-                .GetTimeToEvent(location.getLongitude(),location.getLatitude(),mode);
+                .GetTimeToEvent(location.getLatitude(),location.getLongitude(),mode);
+        timeToBe.add(Calendar.MINUTE,10);
 
-        String mapString = "google.navigation:q=55.7340273,37.5883457&mode=b";
-        Uri gmmIntentUri = Uri.parse(mapString);
+        Date dateToBe = timeToBe.getTime();
 
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 
-        mapIntent.setPackage("com.google.android.apps.maps");
-        PendingIntent pi = PendingIntent.getActivity(this,0,mapIntent,0);
-        Resources res = getResources();
+        if(dateToBe.getTime()>dateOfLecture.getTime()){
+            String mapString = "google.navigation:q=55.7340273,37.5883457";
+            if(mode == RouteMode.CAR){
+                mapString+="&mode=d";
+            }else if(mode == RouteMode.PUBLIC){
+                mapString+="&mode=w";
+            }
 
-        Notification notification = new NotificationCompat.Builder(this)
-                .setTicker(res.getText(R.string.service_notif_title))
-                .setContentText(res.getText(R.string.service_notif_title))
-                .setSmallIcon(android.R.drawable.arrow_down_float)
-                .setContentTitle("Title")
-                .setContentIntent(pi)
-                .setAutoCancel(true)
-                .build();
+            Uri gmmIntentUri = Uri.parse(mapString);
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(0,notification);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            PendingIntent pi = PendingIntent.getActivity(this,0,mapIntent,0);
+            Resources res = getResources();
+
+            Notification notification = new NotificationCompat.Builder(this)
+                    .setTicker(res.getText(R.string.service_notif_ticker))
+                    .setContentText(res.getText(R.string.service_notif_ticker))
+                    .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                    .setContentTitle(res.getText(R.string.service_notif_title))
+                    .addAction(android.R.drawable.ic_dialog_map,res.getString(R.string.service_notif_open_map),pi)
+                    .build();
+
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+            notificationManagerCompat.notify(0,notification);
+        }
     }
 
     class AsyncLocator extends AsyncTask<Location,Void,Void> {
-
         @Override
         protected Void doInBackground(Location... params) {
-            showNotification(params[0]);
+            try{
+                showNotification(params[0]);
+            }catch (Exception e){
+
+            }
             return null;
         }
     }

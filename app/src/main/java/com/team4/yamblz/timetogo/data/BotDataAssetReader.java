@@ -23,6 +23,7 @@ public class BotDataAssetReader {
     public String getText() {
         AssetManager assetManager = mContext.getAssets();
         StringBuilder stringBuilder = new StringBuilder();
+
         try {
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(assetManager.open(BOT_DATA_FILE_PATH)));
